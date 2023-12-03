@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model schedule_events {
+  id              Int           @id @default(autoincrement())
+  user_id         Int
+  service_id      Int
+  scheduleDate_id Int
+  createdAt       DateTime      @default(now()) @db.DateTime(0)
+  updatedAt       DateTime?     @db.DateTime(0)
+  deletedAt       DateTime?     @db.DateTime(0)
+  user            user          @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "schedule_events_FK")
+  services        services      @relation(fields: [service_id], references: [id], onUpdate: Restrict, map: "schedule_events_FK_1")
+  schedule_list   schedule_list @relation(fields: [scheduleDate_id], references: [id], onUpdate: Restrict, map: "schedule_events_FK_2")
+
+  @@index([user_id], map: "schedule_events_FK")
+  @@index([service_id], map: "schedule_events_FK_1")
+  @@index([scheduleDate_id], map: "schedule_events_FK_2")
+}
+
+model schedule_list {
+  id              Int               @id @default(autoincrement())
+  schedule_date   DateTime          @db.DateTime(0)
+  situation       Boolean           @default(false)
+  createdAt       DateTime          @default(now()) @db.DateTime(0)
+  updatedAt       DateTime?         @db.DateTime(0)
+  deletedAt       DateTime?         @db.DateTime(0)
+  schedule_events schedule_events[]
+}
+
+model services {
+  id              Int               @id @default(autoincrement())
+  name            String            @db.VarChar(100)
+  description     String?           @db.VarChar(255)
+  image           String?           @db.VarChar(255)
+  value           Float?
+  createdAt       DateTime          @default(now()) @db.DateTime(0)
+  updatedAt       DateTime?         @db.DateTime(0)
+  deletedAt       DateTime?         @db.DateTime(0)
+  schedule_events schedule_events[]
+}
+
+model user {
+  id              Int               @id @default(autoincrement())
+  name            String            @db.VarChar(255)
+  email           String            @db.VarChar(255)
+  password        String            @db.VarChar(255)
+  createdAt       DateTime          @default(now()) @db.DateTime(0)
+  updatedAt       DateTime?         @db.DateTime(0)
+  deletedAt       DateTime?         @db.DateTime(0)
+  schedule_events schedule_events[]
+}
