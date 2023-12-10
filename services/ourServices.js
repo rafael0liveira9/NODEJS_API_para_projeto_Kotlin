@@ -9,6 +9,24 @@ const { jwtUncrypt } = require('./midleware/authentication'),
     },
 
     // **************************************** CREATE SERVICE
+
+    getServices = async () => {
+
+        try {
+            const desc = await p.services.findMany({
+                where: {
+                    deletedAt: null
+                }
+            })
+            await p.$disconnect();
+            return desc
+
+        } catch (error) {
+            console.log(error, "Erro ao Buscar Serviços");
+            return error;
+        }
+    },
+
     newService = async (body) => {
         try {
             const desc = await p.services.create({
@@ -51,4 +69,4 @@ const { jwtUncrypt } = require('./midleware/authentication'),
         }
     }
 
-module.exports = { newService, deleteService };
+module.exports = { getServices, newService, deleteService };

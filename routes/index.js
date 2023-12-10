@@ -66,6 +66,16 @@ router.post('/delete-schedule', async (req, res) => {
 
 // *********************************************************************************************** SERVICES ROUTES
 
+router.get('/get-services', async (req, res) => {
+    try {
+        const data = await services.getServices();
+        res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Erro ao obter a lista' });
+    }
+});
+
 router.post('/create-service', async (req, res) => {
     try {
         const data = await Promise.all(req.body.map((e) => services.newService(e)));
