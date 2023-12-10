@@ -13,7 +13,6 @@ router.get('/', async (_, res) => res.json({ status: process.env.TEST }));
 // *********************************************************************************************** ROUTES
 // *********************************************************************************************** USER ROUTES
 router.post('/signin-user', async (req, res) => {
-    console.log("chamou a rota")
     const data = await user.signIn(req.body);
     res.status(!!data.status ? data.status : 200).json(!!data.status ? { message: data.message, user: data.user } : data)
 });
