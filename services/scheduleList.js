@@ -300,10 +300,13 @@ const { jwtUncrypt } = require('./midleware/authentication'),
             const desc = await p.schedule_list.findMany({
                 where: {
                     situation: false
+                },
+                orderBy: {
+                    schedule_date: 'asc'
                 }
-            })
+            });
             await p.$disconnect();
-            return desc
+            return desc;
 
         } catch (error) {
             console.log(error, "Erro ao gerar Lista");
