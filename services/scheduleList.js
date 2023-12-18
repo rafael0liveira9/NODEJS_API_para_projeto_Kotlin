@@ -13,7 +13,7 @@ const { jwtUncrypt } = require('./midleware/authentication'),
     newSchedule = async (body, auth) => {
 
         let x = await jwtUncrypt(auth);
-
+        console.log(x.user.email, body.serviceId, body.scheduleDateId)
         if (!!x.user.email && !!body.serviceId && !!body.scheduleDateId) {
 
             const alreadyUser = await p.user.findFirst({
@@ -37,7 +37,7 @@ const { jwtUncrypt } = require('./midleware/authentication'),
                     deletedAt: null
                 }
             })
-
+            console.log(alreadyUser, scheduleExist, serviceExist)
             if (!alreadyUser || !scheduleExist || !serviceExist) {
                 return {
                     status: 409,
@@ -87,43 +87,16 @@ const { jwtUncrypt } = require('./midleware/authentication'),
         let x = await jwtUncrypt(auth);
         let y = await getEventById(body.id, auth)
 
-        console.log(y.res.scheduleDate_id)
-        if (!!x.user.email && !!y.res.scheduleDate_id && !!y.res.service_id) {
+        console.log("user", x)
+        console.log("token", y)
+        if (!!x.user.id && !!y.res.id) {
 
-            const alreadyUser = await p.user.findFirst({
-                where: {
-                    email: x.user.email,
-                    deletedAt: null
-                }
-            })
-
-            const scheduleExist = await p.schedule_list.findFirst({
-                where: {
-                    id: y.res.scheduleDate_id,
-                    situation: true,
-                    deletedAt: null
-                }
-            })
-
-            const scheduleEventExist = await p.services.findFirst({
-                where: {
-                    id: y.res.service_id,
-                    deletedAt: null
-                }
-            })
-
-            if (!alreadyUser || !scheduleExist || !scheduleEventExist) {
-                return {
-                    status: 409,
-                    message: "Critérios para reservar o Horário não atendidos."
-                }
-            }
 
             try {
 
                 const desc = await p.schedule_events.update({
                     where: {
-                        id: y.res.id
+                        id: body.id
                     }, data: {
                         deletedAt: new Date()
                     }
@@ -148,7 +121,7 @@ const { jwtUncrypt } = require('./midleware/authentication'),
                 return error;
             }
         } else {
-            return { status: 401, message: "Critérios para reservar o Horário não atendidos." }
+            return { status: 401, message: "Critérios para cancelar o Horário não atendidos." }
         }
     },
 
