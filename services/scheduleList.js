@@ -84,11 +84,12 @@ const { jwtUncrypt } = require('./midleware/authentication'),
     // **************************************** DELETE EVENT
     deleteSchedule = async (body, auth) => {
 
+        console.log("ID ", body.id)
         let x = await jwtUncrypt(auth);
         let y = await getEventById(body.id, auth)
 
         console.log("user", x)
-        console.log("token", y)
+        console.log("event", y)
         if (!!x.user.id && !!y.res.id) {
 
 

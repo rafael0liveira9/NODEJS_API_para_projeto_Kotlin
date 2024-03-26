@@ -11,6 +11,7 @@ router.use(urlencoded({ extended: true }));
 router.get('/', async (_, res) => res.json({ status: process.env.TEST }));
 
 // *********************************************************************************************** ROUTES
+
 // *********************************************************************************************** USER ROUTES
 router.post('/signin-user', async (req, res) => {
     const data = await user.signIn(req.body);
